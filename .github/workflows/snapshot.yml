@@ -26,17 +26,20 @@ jobs:
             earthly +build
 
         # Publish Artifacts for download
-      - uses: actions/upload-artifact@v3
+      - name: Publish Windows
+        uses: actions/upload-artifact@v3
         with:
           name: windows
           path: builds/windows
 
-      - uses: actions/upload-artifact@v3
+      - name: Publish Linux
+        uses: actions/upload-artifact@v3
         with:
-          name: windows
+          name: linux
           path: builds/linux
 
-      - uses: actions/upload-artifact@v3
+      - name: Publish HTMl5
+        uses: actions/upload-artifact@v3
         with:
           name: html5
           path: builds/html5
