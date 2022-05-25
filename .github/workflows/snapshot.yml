@@ -1,0 +1,38 @@
+name: Builds a Snapshot
+
+on:
+  # Triggers the workflow on push or pull request
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download latest earthly
+        run: "sudo /bin/sh -c 'wget https://github.com/earthly/earthly/releases/latest/download/earthly-linux-amd64 -O /usr/local/bin/earthly && chmod +x /usr/local/bin/earthly'"
+
+      - name: Earthly version
+        run: earthly --version
+
+      - name: Run build
+        run: earthly +build
+
+        # Publish Artifacts for download
+      - uses: actions/upload-artifact@v3
+        with:
+          name: windows
+          path: builds/windows
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: windows
+          path: builds/linux
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: html5
+          path: builds/html5
