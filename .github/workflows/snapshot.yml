@@ -19,7 +19,11 @@ jobs:
         run: earthly --version
 
       - name: Run build
-        run: earthly +build
+        run: |
+            cd game
+            mv export_presets.snapshot.cfg export_presets.cfg
+            cd ..
+            earthly +build
 
         # Publish Artifacts for download
       - uses: actions/upload-artifact@v3

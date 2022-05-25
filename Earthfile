@@ -1,33 +1,25 @@
-build-linux:
+build-base:
     FROM barichello/godot-ci:3.4.4
 
     WORKDIR game
     COPY ./game .
+    RUN mkdir -p /builds
 
-    RUN mkdir -p /builds && \
-        godot -v --export "Linux" /builds/suffragium
+build-linux:
+    FROM +build-base
+    RUN godot -v --export "Linux" /builds/suffragium
 
     SAVE ARTIFACT /builds/*
 
 build-html5:
-    FROM barichello/godot-ci:3.4.4
-
-    WORKDIR game
-    COPY ./game .
-
-    RUN mkdir -p /builds && \
-        godot -v --export "HTML5" /builds/suffragium.html
+    FROM +build-base
+    RUN godot -v --export "HTML5" /builds/suffragium.html
 
     SAVE ARTIFACT /builds/*
 
 build-windows:
-    FROM barichello/godot-ci:3.4.4
-
-    WORKDIR game
-    COPY ./game .
-
-    RUN mkdir -p /builds && \
-        godot -v --export "Windows" /builds/suffragium.exe
+    FROM +build-base
+    RUN godot -v --export "Windows" /builds/suffragium.exe
 
     SAVE ARTIFACT /builds/*
 
@@ -35,6 +27,7 @@ build:
     FROM busybox
 
     WORKDIR builds
+    COPY builds/.gitignore .
     COPY +build-windows/ windows
     COPY +build-linux/ linux
     COPY +build-html5/ html5
