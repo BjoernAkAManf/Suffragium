@@ -22,7 +22,6 @@ func load_game(game_cfg:ConfigFile):
 	_main.hide()
 
 
-
 func _find_games():
 	_games.clear()
 	var dir = Directory.new()
@@ -32,8 +31,9 @@ func _find_games():
 		while file_name != "":
 			if dir.current_is_dir():
 				var game_path = "res://games/" + file_name + "/game.cfg"
-				
-				load_game_cfg_file(game_path)
+				var loaded = load_game_cfg_file(game_path)
+				if loaded != OK:
+			        print('Could not load ', game_path, ' Code: ', loaded)
 			file_name = dir.get_next()
 
 func build_menu():
@@ -53,10 +53,11 @@ func build_menu():
 
 func load_game_cfg_file(path:String):
 	var f := ConfigFile.new()
-	if f.load(path) != OK: return
+	var res = f.load(path)
+	if res != OK: return res
 	f.set_meta("folder_path", path.get_base_dir()+"/")
 	_games.push_back(f)
-	return false
+	return OK
 
 
 
